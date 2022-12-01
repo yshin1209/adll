@@ -20,7 +20,6 @@ class TestGraph (unittest.TestCase):
         result = g.set_node_prop('name', 'Juno', 'age', 18)
         self.assertEqual(result['age'], 18)
 
-
     def test_get_node_prop(self):
         """Function for testing get_node_prop"""
         g.add_node ('Person', 'name', 'Thomas')
