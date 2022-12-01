@@ -1,14 +1,14 @@
 # Graph class
-"""Module providing basic graph queries"""
+"""Module providing basic graph queries (Neo4j Cypher)"""
 
 class Graph:
-    """Class for providing basic graph queries"""
+    """Class for providing basic graph queries (Neo4j Cypher)"""
     # Initialize graph database class
     def __init__(self, graphdb, uri, user, password):
         self.driver = graphdb.driver(uri, auth=(user, password))
 
     # Close session
-    def close(self):
+    def close(self)-> None:
         """Function for session closing"""
         self.driver.close()
 
@@ -22,6 +22,14 @@ class Graph:
 
     def add_node(self, node_label, key, value):
         """Function for adding node"""
+
+        # Check if the parameter types are correct
+        if not isinstance (node_label, str):
+            raise TypeError ("The first argument (node label) must be a string")
+        if not isinstance (key, str):
+            raise TypeError ("The second argument (key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
+
         with self.driver.session() as session:
             result = session.execute_write(self._add_node_tx, node_label, key, value)
             return result
