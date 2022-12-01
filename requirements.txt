@@ -4,3 +4,4 @@ neo4j
 ipykernel
 nose
 pinocchio
+coverage
