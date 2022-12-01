@@ -1,12 +1,15 @@
 # Graph class
-# Yong-Jun Shin
+"""Module providing basic graph queries"""
 
 class Graph:
+    """Class for providing basic graph queries"""
     # Initialize graph database class
     def __init__(self, graphdb, uri, user, password):
         self.driver = graphdb.driver(uri, auth=(user, password))
 
+    # Close session
     def close(self):
+        """Function for session closing"""
         self.driver.close()
 
     # Add node
@@ -18,6 +21,7 @@ class Graph:
         return result.single()[0]
 
     def add_node(self, node_label, key, value):
+        """Function for adding node"""
         with self.driver.session() as session:
             result = session.execute_write(self._add_node_tx, node_label, key, value)
             return result
@@ -32,10 +36,11 @@ class Graph:
         return result.single()[0]
 
     def set_node_prop(self, id_key, id_value, key, value):
+        """Function for setting node property value"""
         with self.driver.session() as session:
             result = session.execute_write(self._set_node_prop_tx, id_key, id_value, key, value)
             return result
-    
+
     # Get node property value
     @staticmethod
     def _get_node_prop_tx(tx, id_key, id_value, key ):
@@ -45,6 +50,7 @@ class Graph:
         return result.single()[0]
 
     def get_node_prop(self, id_key, id_value, key):
+        """Function for getting node property value"""
         with self.driver.session() as session:
             result = session.execute_write(self._get_node_prop_tx, id_key, id_value, key)
             return result

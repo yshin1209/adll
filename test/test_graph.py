@@ -1,3 +1,5 @@
+"""Module for testing graph.py"""
+
 import unittest
 from neo4j import GraphDatabase as graphdb
 from adll import graph
@@ -7,7 +9,9 @@ USER = "neo4j"
 PASSWORD = "A6uVT1wvZfAFLE_O9ilqxiHuDV30in887nHF-ByS_W0"
 g = graph.Graph(graphdb, URI, USER, PASSWORD)
 class TestGraph (unittest.TestCase):
+    """Class for testing graph.py"""
     def test_add_node(self):
+        """Function for testing add_node"""
         g.add_node ('Person', 'name', 'sThomas')
         self.assertEqual(g.get_node_prop('name', 'Thomas', 'name'), 'Thomas')
 
