@@ -3,3 +3,4 @@ twine
 neo4j
 ipykernel
 nose
+pinocchio
