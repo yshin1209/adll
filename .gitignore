@@ -130,3 +130,6 @@ dmypy.json
 
 # Notes
 notes
+
+# Dev container
+.devcontainer
