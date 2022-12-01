@@ -8,7 +8,8 @@ PASSWORD = "A6uVT1wvZfAFLE_O9ilqxiHuDV30in887nHF-ByS_W0"
 g = graph.Graph(graphdb, URI, USER, PASSWORD)
 class TestGraph (unittest.TestCase):
     def test_add_node(self):
-        self.assertEqual(g.get_node_prop('name', 'JungJai2', 'name'), 'JungJai2')
+        g.add_node ('Person', 'name', 'sThomas')
+        self.assertEqual(g.get_node_prop('name', 'Thomas', 'name'), 'Thomas')
 
 if __name__ == '__main__':
     unittest.main()

@@ -48,5 +48,3 @@ class Graph:
         with self.driver.session() as session:
             result = session.execute_write(self._get_node_prop_tx, id_key, id_value, key)
             return result
-        
-        
