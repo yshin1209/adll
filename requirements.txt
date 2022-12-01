@@ -1,3 +1,4 @@
 build
 twine
 neo4j
+ipykernel
