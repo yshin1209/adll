@@ -18,7 +18,8 @@ class TestGraph (unittest.TestCase):
 
     def test_add_node(self):
         """Function for testing add_node"""
-        # To be implemented
+        result = self.g.add_node('Patient', 'id', 'pt24553')
+        self.assertEqual(result, {'id':'pt24553'})
 
     def test_set_node_prop(self):
         """Function for testing set_node_prop"""
@@ -29,7 +30,8 @@ class TestGraph (unittest.TestCase):
     def test_get_node_prop(self):
         """Function for testing get_node_prop"""
         self.g.add_node ('Person', 'name', 'Thomas')
-        self.assertEqual(self.g.get_node_prop('name', 'Thomas', 'name'), 'Thomas')
+        result = self.g.get_node_prop('name', 'Thomas', 'name')
+        self.assertEqual(result, 'Thomas')
 
 if __name__ == '__main__':
     unittest.main()
