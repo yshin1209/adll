@@ -16,13 +16,12 @@ class Graph:
     @staticmethod
     def _add_node_tx(tx, node_label, key, value):
         query = "MERGE (n:" + node_label + "{ " + key + ": $value })" \
-                " RETURN n"
+                " RETURN n{.*}"
         result = tx.run(query, value = value)
         return result.single()[0]
 
     def add_node(self, node_label, key, value):
         """Function for adding node"""
-
         # Check if the parameter types are correct
         if not isinstance (node_label, str):
             raise TypeError ("The first argument (node label) must be a string")
@@ -37,21 +36,19 @@ class Graph:
     # Delete node
     @staticmethod
     def _delete_node_tx(tx, node_label, key, value):
-        query = "MERGE (n:" + node_label + "{ " + key + ": $value })" \
+        query = "MATCH (n:" + node_label + "{ " + key + ": $value })" \
                 " DELETE n"
         result = tx.run(query, value = value)
-        return result.single()[0]
+        return result
 
     def delete_node(self, node_label, key, value):
-        """Function for adding node"""
-
+        """Function for deleting node"""
         # Check if the parameter types are correct
         if not isinstance (node_label, str):
             raise TypeError ("The first argument (node label) must be a string")
         if not isinstance (key, str):
             raise TypeError ("The second argument (key) must be a string")
         # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
-
         with self.driver.session() as session:
             result = session.execute_write(self._delete_node_tx, node_label, key, value)
             return result
