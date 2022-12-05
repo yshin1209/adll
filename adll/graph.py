@@ -81,3 +81,17 @@ class Graph:
         with self.driver.session() as session:
             result = session.execute_write(self._get_node_prop_tx, id_key, id_value, key)
             return result
+    
+    # Remove node property
+    @staticmethod
+    def _remove_node_prop_tx(tx, id_key, id_value, key ):
+        query = "MATCH (n) WHERE n." + id_key + " = $id_value" \
+                " REMOVE n." + key
+        result = tx.run(query, id_value = id_value)
+        return result
+
+    def remove_node_prop(self, id_key, id_value, key):
+        """Function for getting node property value"""
+        with self.driver.session() as session:
+            result = session.execute_write(self._remove_node_prop_tx, id_key, id_value, key)
+            return result

@@ -23,7 +23,7 @@ class TestGraph (unittest.TestCase):
 
     def test_delete_node(self):
         """Function for testing delete_node"""
-        # To be implemented
+        # Not sure how to test
         '''self.g.add_node ('Patient', 'id', 'pt24553')
         result = self.g.delete_node('Patient', 'id', 'pt24553')
         self.assertEqual(result, '')
@@ -40,6 +40,14 @@ class TestGraph (unittest.TestCase):
         self.g.add_node ('Person', 'name', 'Thomas')
         result = self.g.get_node_prop('name', 'Thomas', 'name')
         self.assertEqual(result, 'Thomas')
+
+    def test_remove_node_prop(self):
+        """Function for testing remove_node_prop"""
+        # Not sure how to test
+        '''self.g.add_node ('Patient', 'id', 'pt24553')
+        result = self.g.delete_node('Patient', 'id', 'pt24553')
+        self.assertEqual(result, '')
+        '''
 
 
 if __name__ == '__main__':
