@@ -58,10 +58,9 @@ class Graph:
     def _set_node_prop_tx(tx, id_key, id_value, key, value):
         query = "MATCH (n) WHERE n." + id_key + " = $id_value" \
                 " SET n." + key + " = $value" \
-                " RETURN n"
+                " RETURN n." + key 
         result = tx.run(query, id_value = id_value, value = value)
-        return result.single()[0]
-
+        return [id_key, id_value, key, result.single()[0]]
     def set_node_prop(self, id_key, id_value, key, value):
         """Function for setting node property value"""
         # Check if the parameter types are correct
@@ -116,13 +115,13 @@ class Graph:
 
     # Add edge
     @staticmethod
-    def _add_edge_tx(tx, edge_label, out_key, out_val, in_key, in_val):
+    def _add_edge_tx(tx, edge_label:str, out_key:str, out_val, in_key:str, in_val):
         query = "MATCH (n) WHERE n." + out_key + " = $out_val" \
                 " MATCH (m) WHERE m." + in_key + " = $in_val" \
                 " MERGE (n)-[r:" + edge_label + "]->(m)"
         results = tx.run(query, out_val = out_val, in_val = in_val).data
         return results
-    def add_edge(self, edge_label, out_key, out_val, in_key, in_val):
+    def add_edge(self, edge_label:str, out_key:str, out_val, in_key:str, in_val):
         """Function for adding edge"""
         # Check if the parameter types are correct
         if not isinstance (edge_label, str):
@@ -156,4 +155,5 @@ class Graph:
         # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
         with self.driver.session() as session:
             session.execute_write(self._delete_edge_tx, edge_label, out_key, out_val, in_key, in_val)
-        
+    
+    
