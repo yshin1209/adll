@@ -58,10 +58,10 @@ class Graph:
     def _set_node_prop_tx(tx, id_key, id_value, key, value):
         query = "MATCH (n) WHERE n." + id_key + " = $id_value" \
                 " SET n." + key + " = $value" \
-                " RETURN n." + key 
+                " RETURN n." + key
         result = tx.run(query, id_value = id_value, value = value)
         return [id_key, id_value, key, result.single()[0]]
-    def set_node_prop(self, id_key, id_value, key, value):
+    def set_node_prop(self, id_key:str, id_value, key:str, value):
         """Function for setting node property value"""
         # Check if the parameter types are correct
         if not isinstance (id_key, str):
@@ -70,7 +70,7 @@ class Graph:
             raise TypeError ("The third argument (key) must be a string")
         # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
         with self.driver.session() as session:
-            result = session.execute_write(self._set_node_prop_tx, id_key, id_value, key, value)
+            result = session.execute_write (self._set_node_prop_tx, id_key, id_value, key, value)
             return result
 
     # Get node property value
@@ -156,4 +156,22 @@ class Graph:
         with self.driver.session() as session:
             session.execute_write(self._delete_edge_tx, edge_label, out_key, out_val, in_key, in_val)
     
-    
+    # Execute math operation
+    @staticmethod
+    def _math_op_tx(tx, id_key, id_value):
+        query = "MATCH (x) WHERE x." + id_key + " = $id_value" \
+            " MATCH (x) -[:DATA2MATH]-> (math) <-[:PARAM2MATH]-(w)" \
+            " WITH math," \
+            " CASE math.name" \
+            " WHEN 'add' THEN x.value+w.value" \
+            " WHEN 'mul' THEN x.value*w.value" \
+            " END AS output" \
+            " MATCH (math)-[:MATH2DATA]->(y)" \
+            " SET y.value = output" \
+            " RETURN y.name"
+        result = tx.run(query, id_value= id_value)
+        return result.single()[0]
+    def math_op(self, id_key, id_value):
+        with self.driver.session() as session:
+            result = session.execute_write(self._math_op_tx, id_key, id_value)
+        return result
