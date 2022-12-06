@@ -135,3 +135,25 @@ class Graph:
         with self.driver.session() as session:
             results = session.execute_write(self._add_edge_tx, edge_label, out_key, out_val, in_key, in_val)
             return (results)
+
+    # Delete edge
+    @staticmethod
+    def _delete_edge_tx(tx, edge_label, out_key, out_val, in_key, in_val):
+        query = "MATCH (n) WHERE n." + out_key + " = $out_val" \
+                " MATCH (m) WHERE m." + in_key + " = $in_val" \
+                " MATCH (n)-[r:" + edge_label + "]->(m)" \
+                " DELETE r"
+        tx.run(query, out_val = out_val, in_val = in_val)
+    def delete_edge(self, edge_label, out_key, out_val, in_key, in_val):
+        """Function for adding edge"""
+        # Check if the parameter types are correct
+        if not isinstance (edge_label, str):
+            raise TypeError ("The first argument (edge label) must be a string")
+        if not isinstance (out_key, str):
+            raise TypeError ("The second argument (out-node key) must be a string")
+        if not isinstance (in_key, str):
+            raise TypeError ("The fourth argument (in-node key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
+        with self.driver.session() as session:
+            session.execute_write(self._delete_edge_tx, edge_label, out_key, out_val, in_key, in_val)
+        
