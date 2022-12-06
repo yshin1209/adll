@@ -64,6 +64,12 @@ class Graph:
 
     def set_node_prop(self, id_key, id_value, key, value):
         """Function for setting node property value"""
+        # Check if the parameter types are correct
+        if not isinstance (id_key, str):
+            raise TypeError ("The first argument (identification key) must be a string")
+        if not isinstance (key, str):
+            raise TypeError ("The third argument (key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
         with self.driver.session() as session:
             result = session.execute_write(self._set_node_prop_tx, id_key, id_value, key, value)
             return result
@@ -78,6 +84,12 @@ class Graph:
 
     def get_node_prop(self, id_key, id_value, key):
         """Function for getting node property value"""
+        # Check if the parameter types are correct
+        if not isinstance (id_key, str):
+            raise TypeError ("The first argument (identification key) must be a string")
+        if not isinstance (key, str):
+            raise TypeError ("The third argument (key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
         with self.driver.session() as session:
             result = session.execute_write(self._get_node_prop_tx, id_key, id_value, key)
             return result
@@ -92,6 +104,34 @@ class Graph:
 
     def remove_node_prop(self, id_key, id_value, key):
         """Function for getting node property value"""
+        # Check if the parameter types are correct
+        if not isinstance (id_key, str):
+            raise TypeError ("The first argument (identification key) must be a string")
+        if not isinstance (key, str):
+            raise TypeError ("The third argument (key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
         with self.driver.session() as session:
             result = session.execute_write(self._remove_node_prop_tx, id_key, id_value, key)
             return result
+
+    # Add edge
+    @staticmethod
+    def _add_edge_tx(tx, edge_label, out_key, out_val, in_key, in_val):
+        query = "MATCH (n) WHERE n." + out_key + " = $out_val" \
+                " MATCH (m) WHERE m." + in_key + " = $in_val" \
+                " MERGE (n)-[r:" + edge_label + "]->(m)"
+        results = tx.run(query, out_val = out_val, in_val = in_val).data
+        return results
+    def add_edge(self, edge_label, out_key, out_val, in_key, in_val):
+        """Function for adding edge"""
+        # Check if the parameter types are correct
+        if not isinstance (edge_label, str):
+            raise TypeError ("The first argument (edge label) must be a string")
+        if not isinstance (out_key, str):
+            raise TypeError ("The second argument (out-node key) must be a string")
+        if not isinstance (in_key, str):
+            raise TypeError ("The fourth argument (in-node key) must be a string")
+        # neo4j property value types: https://neo4j.com/docs/cypher-manual/current/syntax/values/
+        with self.driver.session() as session:
+            results = session.execute_write(self._add_edge_tx, edge_label, out_key, out_val, in_key, in_val)
+            return (results)
